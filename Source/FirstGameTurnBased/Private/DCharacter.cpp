@@ -3,13 +3,16 @@
 
 #include "DCharacter.h"
 
+#include "DAction.h"
+#include "DActionComponent.h"
 #include "DAttributeComponent.h"
 #include "DWorldUserWidget.h"
-
+#include "DAction.h"
 
 ADCharacter::ADCharacter()
 {
 	AttributeComp = CreateDefaultSubobject<UDAttributeComponent>("AttributeComp");
+	ActionComp = CreateDefaultSubobject<UDActionComponent>("ActionComp");
 }
 
 void ADCharacter::PostInitializeComponents()
@@ -27,6 +30,11 @@ void ADCharacter::PostInitializeComponents()
 	}
 }
 
+void ADCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
 void ADCharacter::HealSelf(int32 Amount)
 {
 	AttributeComp->ApplyHealthChange(this, Amount);
@@ -37,10 +45,16 @@ void ADCharacter::MoveUp(const float Value)
 	AddMovementInput(GetActorRightVector(), Value);
 }
 
+void ADCharacter::PrimaryAttack()
+{
+	ActionComp->StartActionByName("PrimaryAttack");
+}
+
 void ADCharacter::MoveRight(const float Value)
 {
 	AddMovementInput(GetActorForwardVector(), Value);
 }
+
 
 void ADCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -48,4 +62,6 @@ void ADCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAxis("MoveRight", this, &ADCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("MoveUp", this, &ADCharacter::MoveUp);
+
+	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ADCharacter::PrimaryAttack);
 }

@@ -6,6 +6,7 @@
 #include "PaperZDCharacter.h"
 #include "DCharacter.generated.h"
 
+class UDActionComponent;
 class UDWorldUserWidget;
 class UDAttributeComponent;
 class UUserWidget;
@@ -26,6 +27,8 @@ public:
 
 	virtual void PostInitializeComponents() override;
 
+	virtual void BeginPlay() override;
+
 	UFUNCTION(Exec)
 	void HealSelf(int32 Amount = 100);
 
@@ -36,8 +39,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category= "UI")
 	TSubclassOf<UUserWidget> HealthBarWidgetClass;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	UDAttributeComponent* AttributeComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	UDActionComponent* ActionComp;
+
+	UFUNCTION(BlueprintCallable)
+	void PrimaryAttack();
 
 	void MoveRight(float Value);
 	void MoveUp(float Value);
