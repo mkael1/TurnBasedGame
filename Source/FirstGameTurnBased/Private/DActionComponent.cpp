@@ -29,7 +29,19 @@ bool UDActionComponent::StartActionByName(FName ActionName)
 	{
 		if (Action && Action->ActionName == ActionName)
 		{
-			return Action->StartAction();
+			 Action->StartAction();
+		}
+	}
+	return false;
+}
+
+bool UDActionComponent::StopActionByName(FName ActionName)
+{
+	for (UDAction* Action : Actions)
+	{
+		if (Action && Action->ActionName == ActionName)
+		{
+			return Action->StopAction();
 		}
 	}
 	return false;

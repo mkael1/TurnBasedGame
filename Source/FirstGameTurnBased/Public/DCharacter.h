@@ -6,6 +6,8 @@
 #include "PaperZDCharacter.h"
 #include "DCharacter.generated.h"
 
+class USphereComponent;
+class UDInteractionComponent;
 class UDActionComponent;
 class UDWorldUserWidget;
 class UDAttributeComponent;
@@ -32,6 +34,7 @@ public:
 	UFUNCTION(Exec)
 	void HealSelf(int32 Amount = 100);
 
+
 protected:
 	UPROPERTY()
 	UDWorldUserWidget* HealthBarWidgetInstance;
@@ -44,6 +47,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	UDActionComponent* ActionComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	UDInteractionComponent* InteractionComp;
 
 	UFUNCTION(BlueprintCallable)
 	void PrimaryAttack();

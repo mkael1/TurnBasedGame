@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UObject/NoExportTypes.h"
 #include "DAction.generated.h"
 
+class UDActionComponent;
 /**
  * 
  */
@@ -22,12 +24,24 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	bool StopAction();
 
-	bool IsRunning();
+	UFUNCTION(BlueprintCallable)
+	bool GetIsRunning() const;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Action")
 	FName ActionName;
 
-private:
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Tags")
+	FGameplayTagContainer GrantsTag;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Tags")
+	FGameplayTagContainer BlockedTags;
+	
+	UFUNCTION(BlueprintCallable)
+	UDActionComponent* GetActionComp();
+	
+
 
 
 	bool bIsRunning;

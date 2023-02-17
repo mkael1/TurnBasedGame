@@ -3,16 +3,17 @@
 
 #include "DCharacter.h"
 
-#include "DAction.h"
 #include "DActionComponent.h"
 #include "DAttributeComponent.h"
+#include "DInteractionComponent.h"
 #include "DWorldUserWidget.h"
-#include "DAction.h"
+#include "Components/SphereComponent.h"
 
 ADCharacter::ADCharacter()
 {
 	AttributeComp = CreateDefaultSubobject<UDAttributeComponent>("AttributeComp");
 	ActionComp = CreateDefaultSubobject<UDActionComponent>("ActionComp");
+	InteractionComp = CreateDefaultSubobject<UDInteractionComponent>("InteractionComp");
 }
 
 void ADCharacter::PostInitializeComponents()
