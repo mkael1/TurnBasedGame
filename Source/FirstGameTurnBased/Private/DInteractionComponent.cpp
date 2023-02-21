@@ -23,23 +23,25 @@ void UDInteractionComponent::BeginPlay()
 
 	// ...
 	CollisionSphere = FCollisionShape::MakeSphere(CollisionMaxRange);
-
 }
 
 
 // Called every frame
-void UDInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UDInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                           FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 
 	// draw collision sphere
-	DrawDebugSphere(GetWorld(), GetOwner()->GetActorLocation(), CollisionSphere.GetSphereRadius(), 50, FColor::Red, false);
+	DrawDebugSphere(GetWorld(), GetOwner()->GetActorLocation(), CollisionSphere.GetSphereRadius(), 50, FColor::Red,
+	                false);
 	FCollisionObjectQueryParams Params;
-	Params.AddObjectTypesToQuery(ECC_WorldDynamic);
-	
+	Params.AddObjectTypesToQuery(ECC_World);
+
 	TArray<FHitResult> Hits;
-	GetWorld()->SweepMultiByObjectType(Hits, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation(), FQuat::Identity, Params, CollisionSphere);
+	GetWorld()->SweepMultiByObjectType(Hits, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation(),
+	                                   FQuat::Identity, Params, CollisionSphere);
 
 
 	for (FHitResult Hit : Hits)
@@ -51,4 +53,3 @@ void UDInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		}
 	}
 }
-
