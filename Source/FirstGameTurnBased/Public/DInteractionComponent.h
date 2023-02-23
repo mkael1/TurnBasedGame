@@ -6,28 +6,37 @@
 #include "Components/ActorComponent.h"
 #include "DInteractionComponent.generated.h"
 
-
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class UDWorldUserWidget;
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class FIRSTGAMETURNBASED_API UDInteractionComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UDInteractionComponent();
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	
+
 	FCollisionShape CollisionSphere;
 
-	UPROPERTY(EditDefaultsOnly, Category="Collision")
-	float CollisionMaxRange;
+	UPROPERTY(EditDefaultsOnly, Category = "Collision")
+		float CollisionMaxRange;
 
-public:	
+	UPROPERTY(EditDefaultsOnly, Category = "Widget")
+		TSubclassOf<UDWorldUserWidget> WidgetClass;
+
+	UPROPERTY()
+		UDWorldUserWidget* WidgetClassInstance;
+
+	UPROPERTY()
+	AActor* AttachedTo;
+
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+
 };

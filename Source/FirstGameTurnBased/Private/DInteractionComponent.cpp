@@ -5,6 +5,7 @@
 
 #include "DGameplayInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "DWorldUserWidget.h"
 
 // Sets default values for this component's properties
 UDInteractionComponent::UDInteractionComponent()
@@ -21,35 +22,61 @@ void UDInteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
 	CollisionSphere = FCollisionShape::MakeSphere(CollisionMaxRange);
 }
 
 
 // Called every frame
-void UDInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-                                           FActorComponentTickFunction* ThisTickFunction)
+void UDInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 
 	// draw collision sphere
-	DrawDebugSphere(GetWorld(), GetOwner()->GetActorLocation(), CollisionSphere.GetSphereRadius(), 50, FColor::Red,
-	                false);
+	DrawDebugSphere(GetWorld(), GetOwner()->GetActorLocation(), CollisionSphere.GetSphereRadius(), 50, FColor::Red, false);
 	FCollisionObjectQueryParams Params;
-	Params.AddObjectTypesToQuery(ECC_World);
+	Params.AddObjectTypesToQuery(ECC_WorldDynamic);
 
-	TArray<FHitResult> Hits;
-	GetWorld()->SweepMultiByObjectType(Hits, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation(),
-	                                   FQuat::Identity, Params, CollisionSphere);
+	FHitResult Hit;
+	GetWorld()->SweepSingleByObjectType(Hit, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation(), FQuat::Identity, Params, CollisionSphere);
 
 
-	for (FHitResult Hit : Hits)
+	AActor* ActorHit = Hit.GetActor();
+	if (ActorHit != nullptr)
 	{
-		AActor* ActorHit = Hit.GetActor();
 		if (ActorHit->Implements<UDGameplayInterface>())
 		{
-			GEngine->AddOnScreenDebugMessage(0, 1, FColor::Red, "Test");
+			AttachedTo = ActorHit;
+		}
+	}
+	else
+	{
+		AttachedTo = nullptr;
+	}
+
+
+	if (AttachedTo)
+	{
+		if (ensure(WidgetClass) && WidgetClassInstance == nullptr)
+		{
+			WidgetClassInstance = CreateWidget<UDWorldUserWidget>(GetWorld(), WidgetClass);
+		}
+
+		if (WidgetClass && AttachedTo)
+		{
+			WidgetClassInstance->AttachedActor = AttachedTo;
+
+			if (!WidgetClassInstance->IsInViewport())
+			{
+				WidgetClassInstance->AddToViewport(10);
+			}
+		}
+	}
+	else
+	{
+		if (WidgetClassInstance)
+		{
+			WidgetClassInstance->RemoveFromParent();
 		}
 	}
 }

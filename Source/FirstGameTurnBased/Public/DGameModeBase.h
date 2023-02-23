@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "DGameModeBase.generated.h"
+
+class ADGameState;
 /**
  * 
  */
@@ -15,6 +17,15 @@ class FIRSTGAMETURNBASED_API ADGameModeBase : public AGameModeBase
 
 	virtual void BeginPlay() override;
 
-private:
+protected:
 	void EnterCombat();
+
+	void InitializeTeams(APawn* Player);
+
+	void StartCombat();
+
+	void FinishPlayerCombatTurn(APawn* Player);
+
+	UPROPERTY(BlueprintReadOnly)
+	ADGameState* GameStateInstance;
 };
