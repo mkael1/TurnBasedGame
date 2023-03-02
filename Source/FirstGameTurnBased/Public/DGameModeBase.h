@@ -11,6 +11,7 @@ class ADGameState;
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnTurnChanged, AActor*, Instigator, AActor*, ActiveActor, int, TurnCount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCombatStarted, AActor*, Player, AActor*, Enemy);
 
 /**
  * 
@@ -23,12 +24,11 @@ class FIRSTGAMETURNBASED_API ADGameModeBase : public AGameModeBase
 	virtual void BeginPlay() override;
 
 protected:
-	void EnterCombat();
-
 	void InitializeTeams(APawn* Player);
 
 	void StartCombat();
 
+	UFUNCTION(BlueprintCallable)
 	void FinishPlayerCombatTurn(APawn* Player);
 
 	UPROPERTY(BlueprintReadOnly)
@@ -36,7 +36,15 @@ protected:
 
 public:
 
+	UFUNCTION(BlueprintCallable)
+		void EnterCombat(AActor* Player, AActor* Enemy);
 
 	UPROPERTY(BlueprintAssignable)
 		FOnTurnChanged OnTurnChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnCombatStarted OnCombatStarted;
+
+	UFUNCTION(BlueprintCallable)
+		void DevSwitchTurn();
 };

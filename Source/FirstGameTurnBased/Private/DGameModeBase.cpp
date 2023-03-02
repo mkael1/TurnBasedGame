@@ -11,18 +11,15 @@ void ADGameModeBase::BeginPlay()
 	Super::BeginPlay();
 	GameStateInstance = GetGameState<ADGameState>();
 
-
-	EnterCombat();
 }
 
-void ADGameModeBase::EnterCombat()
+void ADGameModeBase::EnterCombat(AActor* Player, AActor* Enemy)
 {
+	OnCombatStarted.Broadcast(Player, Enemy);
 
-	APawn* Player = GetWorld()->GetFirstPlayerController()->GetPawn();
-	UCharacterMovementComponent* CharMovement = Cast<UCharacterMovementComponent>(Player->GetComponentByClass(UCharacterMovementComponent::StaticClass()));
-	CharMovement->DisableMovement();
+	APawn* PlayerPawn = Cast<APawn>(Player);
 
-	InitializeTeams(Player);
+	InitializeTeams(PlayerPawn);
 
 	StartCombat();
 }
@@ -41,6 +38,10 @@ void ADGameModeBase::StartCombat()
 
 void ADGameModeBase::FinishPlayerCombatTurn(APawn* Player)
 {
+	if (!Player) {
+		return;
+	}
+
 	APawn* OldActor = GameStateInstance->GetCurrentTurn();
 	if (OldActor == Player)
 	{
@@ -51,5 +52,7 @@ void ADGameModeBase::FinishPlayerCombatTurn(APawn* Player)
 
 void ADGameModeBase::DevSwitchTurn()
 {
+	GameStateInstance->ChangeTurn();
+	OnTurnChanged.Broadcast(nullptr, nullptr, GameStateInstance->GetTurnCount());
 }
 
