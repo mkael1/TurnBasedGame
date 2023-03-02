@@ -6,7 +6,12 @@
 #include "GameFramework/GameModeBase.h"
 #include "DGameModeBase.generated.h"
 
+
 class ADGameState;
+
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnTurnChanged, AActor*, Instigator, AActor*, ActiveActor, int, TurnCount);
+
 /**
  * 
  */
@@ -28,4 +33,10 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	ADGameState* GameStateInstance;
+
+public:
+
+
+	UPROPERTY(BlueprintAssignable)
+		FOnTurnChanged OnTurnChanged;
 };

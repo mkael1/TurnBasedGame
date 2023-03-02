@@ -41,9 +41,15 @@ void ADGameModeBase::StartCombat()
 
 void ADGameModeBase::FinishPlayerCombatTurn(APawn* Player)
 {
-	if (GameStateInstance->GetCurrentTurn() == Player)
+	APawn* OldActor = GameStateInstance->GetCurrentTurn();
+	if (OldActor == Player)
 	{
 		GameStateInstance->ChangeTurn();
+		OnTurnChanged.Broadcast(OldActor, Player, GameStateInstance->GetTurnCount());
 	}
+}
+
+void ADGameModeBase::DevSwitchTurn()
+{
 }
 

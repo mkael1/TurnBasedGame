@@ -47,6 +47,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void ChangeTurn();
 
+	UFUNCTION(BlueprintCallable)
+	int GetTurnCount();
+
 
 
 };

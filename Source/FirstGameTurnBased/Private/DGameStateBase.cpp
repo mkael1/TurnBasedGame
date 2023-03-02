@@ -42,4 +42,9 @@ void ADGameState::ChangeTurn()
 	TurnCount++;
 }
 
+int ADGameState::GetTurnCount()
+{
+	return TurnCount;
+}
+
 
