@@ -6,7 +6,6 @@
 #include "PaperZDCharacter.h"
 #include "DCharacter.generated.h"
 
-class USphereComponent;
 class UDInteractionComponent;
 class UDActionComponent;
 class UDWorldUserWidget;

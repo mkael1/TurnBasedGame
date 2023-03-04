@@ -24,7 +24,7 @@ class FIRSTGAMETURNBASED_API ADGameModeBase : public AGameModeBase
 	virtual void BeginPlay() override;
 
 protected:
-	void InitializeTeams(APawn* Player);
+	void InitializeTeams(APawn* PlayerPawn, APawn* EnemyPawn);
 
 	void StartCombat();
 

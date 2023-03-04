@@ -18,17 +18,18 @@ void ADGameModeBase::EnterCombat(AActor* Player, AActor* Enemy)
 	OnCombatStarted.Broadcast(Player, Enemy);
 
 	APawn* PlayerPawn = Cast<APawn>(Player);
+	APawn* EnemyPawn = Cast<APawn>(Enemy);
 
-	InitializeTeams(PlayerPawn);
+	InitializeTeams(PlayerPawn, EnemyPawn);
 
 	StartCombat();
 }
 
-void ADGameModeBase::InitializeTeams(APawn* Player)
+void ADGameModeBase::InitializeTeams(APawn* PlayerPawn, APawn* EnemyPawn)
 {
 
-	GameStateInstance->SetTeamOne(Player);
-	GameStateInstance->SetTeamTwo(Player);
+	GameStateInstance->SetTeamOne(PlayerPawn);
+	GameStateInstance->SetTeamTwo(EnemyPawn);
 }
 
 void ADGameModeBase::StartCombat()

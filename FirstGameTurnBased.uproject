@@ -12,7 +12,8 @@
 				"PaperZD",
 				"Engine",
 				"UMG",
-				"CoreUObject"
+				"CoreUObject",
+				"AIModule"
 			]
 		}
 	],

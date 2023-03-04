@@ -7,6 +7,8 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "DWorldUserWidget.h"
 
+static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(TEXT("D.InteractionDebugDraw"), false, TEXT("Enable debug lines for Interact component"), ECVF_Cheat);
+
 // Sets default values for this component's properties
 UDInteractionComponent::UDInteractionComponent()
 {
@@ -29,11 +31,13 @@ void UDInteractionComponent::BeginPlay()
 // Called every frame
 void UDInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
+	bool bDrawDebugLines = CVarDebugDrawInteraction.GetValueOnGameThread();
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-
-	// draw collision sphere
+	if(bDrawDebugLines)
 	DrawDebugSphere(GetWorld(), GetOwner()->GetActorLocation(), CollisionSphere.GetSphereRadius(), 50, FColor::Red, false);
+
+
 	FCollisionObjectQueryParams Params;
 	Params.AddObjectTypesToQuery(ECC_WorldDynamic);
 
