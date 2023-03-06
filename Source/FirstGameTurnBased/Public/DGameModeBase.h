@@ -23,6 +23,8 @@ class FIRSTGAMETURNBASED_API ADGameModeBase : public AGameModeBase
 
 	virtual void BeginPlay() override;
 
+
+
 protected:
 	void InitializeTeams(APawn* PlayerPawn, APawn* EnemyPawn);
 
@@ -47,4 +49,5 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void DevSwitchTurn();
+
 };

@@ -4,6 +4,7 @@
 #include "DGameModeBase.h"
 #include "DGameStateBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "DPlayerController.h"
 
 
 void ADGameModeBase::BeginPlay()

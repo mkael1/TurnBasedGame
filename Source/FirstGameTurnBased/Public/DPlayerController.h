@@ -8,7 +8,7 @@
 
 class ADCharacter;
 /**
- * 
+ *
  */
 UCLASS()
 class FIRSTGAMETURNBASED_API ADPlayerController : public APlayerController
@@ -18,33 +18,41 @@ class FIRSTGAMETURNBASED_API ADPlayerController : public APlayerController
 
 public:
 
-	UFUNCTION(BlueprintCallable)
-	void AddCharacterToParty(TSubclassOf<ADCharacter> CharacterToAdd);
+	UFUNCTION(BlueprintCallable, Category = "Party")
+		ADCharacter* AddCharacterToParty(TSubclassOf<ADCharacter> CharacterToAdd, AActor* PlayerStartActor);
 
+	UFUNCTION(BlueprintCallable, Category = "Party")
+		void SetPartyLeader(ADCharacter* PartyMemberToSetLeader);
+
+	UFUNCTION(BlueprintCallable, Category = "Party")
+		ADCharacter* GetPartyLeader();
 
 protected:
 
 	UPROPERTY(EditDefaultsOnly)
-	int MaxPartySize = 4;
+		int MaxPartySize = 4;
 
-	UPROPERTY(EditDefaultsOnly, Category="UI")
-	TSubclassOf<UUserWidget> CombatWidgetClass;
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+		TSubclassOf<UUserWidget> CombatWidgetClass;
 
-
-	// Party members on game start
-	UPROPERTY(EditDefaultsOnly, Category="Party")
-	TArray<TSubclassOf<ADCharacter>> StartingPartyMembers;
+	// Party member on game start
+	UPROPERTY(EditDefaultsOnly, Category = "Party")
+		TSubclassOf<ADCharacter> StartingPartyMember;
 
 	// Current party members
 	UPROPERTY(BlueprintReadOnly)
-	TArray<ADCharacter*> PartyMembers;
+		TArray<ADCharacter*> PartyMembers;
+
+	ADCharacter* PartyLeader;
 
 	UPROPERTY()
-	UUserWidget* CombatWidgetInstance;
+		UUserWidget* CombatWidgetInstance;
 
 	UFUNCTION(BlueprintCallable)
-	void ToggleCombatUI();
+		void ToggleCombatUI();
 
 	virtual void BeginPlay() override;
-	
+
+	void InitializePlayerParty();
+
 };
