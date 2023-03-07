@@ -6,6 +6,7 @@
 #include "DCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "DGameModeBase.h"
+#include "DAction.h"
 
 
 void ADPlayerController::BeginPlay()
@@ -23,6 +24,22 @@ void ADPlayerController::InitializePlayerParty()
 	ADCharacter* InitialPartyMember = AddCharacterToParty(StartingPartyMember, PlayerStartActor);
 	Possess(InitialPartyMember);
 	SetPartyLeader(InitialPartyMember);
+}
+
+void ADPlayerController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (SelectedAction)
+	{
+		FHitResult Hit;
+
+		GetHitResultUnderCursorForObjects(ObjectQueryParam, true, Hit);
+		if (Hit.GetActor())
+		{
+			GEngine->AddOnScreenDebugMessage(0, 1, FColor::Red, "Got Actor");
+		}
+	}
 }
 
 
@@ -75,6 +92,12 @@ void ADPlayerController::SetPartyLeader(ADCharacter* PartyMemberToSetLeader)
 ADCharacter* ADPlayerController::GetPartyLeader()
 {
 	return PartyLeader;
+}
+
+bool ADPlayerController::SelectAction(TSubclassOf<UDAction> Action)
+{
+	SelectedAction = Action;
+	return true;
 }
 
 void ADPlayerController::ToggleCombatUI()

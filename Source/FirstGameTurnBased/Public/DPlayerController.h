@@ -7,6 +7,7 @@
 #include "DPlayerController.generated.h"
 
 class ADCharacter;
+class UDAction;
 /**
  *
  */
@@ -27,7 +28,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Party")
 		ADCharacter* GetPartyLeader();
 
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	bool SelectAction(TSubclassOf<UDAction> Action);
+
 protected:
+	// Object types to query on tick when an ability is selected.
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+		TArray<TEnumAsByte<EObjectTypeQuery>> ObjectQueryParam;
+
+	UPROPERTY()
+		TSubclassOf<UDAction> SelectedAction;
 
 	UPROPERTY(EditDefaultsOnly)
 		int MaxPartySize = 4;
@@ -43,10 +53,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 		TArray<ADCharacter*> PartyMembers;
 
-	ADCharacter* PartyLeader;
+	UPROPERTY()
+		ADCharacter* PartyLeader;
 
 	UPROPERTY()
 		UUserWidget* CombatWidgetInstance;
+
 
 	UFUNCTION(BlueprintCallable)
 		void ToggleCombatUI();
@@ -55,4 +67,6 @@ protected:
 
 	void InitializePlayerParty();
 
+
+	virtual void Tick(float DeltaSeconds) override;
 };
