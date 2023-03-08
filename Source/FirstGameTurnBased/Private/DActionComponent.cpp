@@ -23,19 +23,19 @@ void UDActionComponent::BeginPlay()
 	}
 }
 
-bool UDActionComponent::StartActionByName(FName ActionName)
+bool UDActionComponent::StartActionByName(AActor* Instigator, FName ActionName, AActor* TargetActor)
 {
 	for (UDAction* Action : Actions)
 	{
 		if (Action && Action->ActionName == ActionName)
 		{
-			 Action->StartAction();
+			 Action->StartAction(TargetActor);
 		}
 	}
 	return false;
 }
 
-bool UDActionComponent::StopActionByName(FName ActionName)
+bool UDActionComponent::StopActionByName(AActor* Instigator, FName ActionName)
 {
 	for (UDAction* Action : Actions)
 	{

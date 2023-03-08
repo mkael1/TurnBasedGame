@@ -23,6 +23,8 @@ class FIRSTGAMETURNBASED_API ADAICharacter : public APaperZDCharacter
 public:
 	ADAICharacter();
 
+	virtual void PostInitializeComponents() override;
+
 protected:
 	UPROPERTY()
 		UDWorldUserWidget* HealthBarWidgetInstance;

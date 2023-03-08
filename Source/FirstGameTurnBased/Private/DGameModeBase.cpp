@@ -36,6 +36,7 @@ void ADGameModeBase::InitializeTeams(APawn* PlayerPawn, APawn* EnemyPawn)
 void ADGameModeBase::StartCombat()
 {
 	GameStateInstance->ChangeTurn();
+	OnTurnChanged.Broadcast(this, GameStateInstance->GetCurrentTurn(), GameStateInstance->GetTurnCount());
 }
 
 void ADGameModeBase::FinishPlayerCombatTurn(APawn* Player)
@@ -48,7 +49,7 @@ void ADGameModeBase::FinishPlayerCombatTurn(APawn* Player)
 	if (OldActor == Player)
 	{
 		GameStateInstance->ChangeTurn();
-		OnTurnChanged.Broadcast(OldActor, Player, GameStateInstance->GetTurnCount());
+		OnTurnChanged.Broadcast(OldActor, GameStateInstance->GetCurrentTurn(), GameStateInstance->GetTurnCount());
 	}
 }
 

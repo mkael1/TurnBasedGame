@@ -4,6 +4,7 @@
 #include "AI/DAICharacter.h"
 #include "DAttributeComponent.h"
 #include "DActionComponent.h"
+#include "DWorldUserWidget.h"
 
 ADAICharacter::ADAICharacter()
 {
@@ -11,4 +12,17 @@ ADAICharacter::ADAICharacter()
 	ActionComp = CreateDefaultSubobject<UDActionComponent>("ActionComp");
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+}
+
+void ADAICharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	if (HealthBarWidgetInstance == nullptr && ensure(HealthBarWidgetClass))
+	{
+		HealthBarWidgetInstance = CreateWidget<UDWorldUserWidget>(GetWorld(), HealthBarWidgetClass);
+		HealthBarWidgetInstance->AttachedActor = this;
+		HealthBarWidgetInstance->AddToViewport();
+	}
 }

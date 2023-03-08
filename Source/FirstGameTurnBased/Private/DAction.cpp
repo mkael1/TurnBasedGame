@@ -5,7 +5,7 @@
 
 #include "DActionComponent.h"
 
-bool UDAction::StartAction_Implementation()
+bool UDAction::StartAction_Implementation(AActor* Target = nullptr)
 {
 	UDActionComponent* Comp = GetActionComp();
 

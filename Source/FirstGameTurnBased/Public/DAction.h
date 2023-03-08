@@ -17,7 +17,7 @@ class FIRSTGAMETURNBASED_API UDAction : public UObject
 
 public:
 	UFUNCTION(BlueprintNativeEvent)
-	bool StartAction();
+	bool StartAction(AActor* Target = nullptr);
 
 	UFUNCTION(BlueprintNativeEvent)
 	bool StopAction();

@@ -33,6 +33,8 @@ public:
 	UFUNCTION(Exec)
 	void HealSelf(int32 Amount = 100);
 
+	UFUNCTION(BlueprintCallable)
+		void PrimaryAttack(AActor* Target, TSubclassOf<UDAction> Action);
 
 protected:
 	UPROPERTY()
@@ -50,8 +52,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	UDInteractionComponent* InteractionComp;
 
-	UFUNCTION(BlueprintCallable)
-	void PrimaryAttack();
+
 
 	void MoveRight(float Value);
 	void MoveUp(float Value);

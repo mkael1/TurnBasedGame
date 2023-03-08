@@ -37,7 +37,10 @@ void ADPlayerController::Tick(float DeltaSeconds)
 		GetHitResultUnderCursorForObjects(ObjectQueryParam, true, Hit);
 		if (Hit.GetActor())
 		{
-			GEngine->AddOnScreenDebugMessage(0, 1, FColor::Red, "Got Actor");
+			if (ActivePartyMember)
+			{
+				ActivePartyMember->PrimaryAttack(Hit.GetActor(), SelectedAction);
+			}
 		}
 	}
 }
@@ -99,6 +102,26 @@ bool ADPlayerController::SelectAction(TSubclassOf<UDAction> Action)
 	SelectedAction = Action;
 	return true;
 }
+
+void ADPlayerController::SetActivePartyMember(AActor* PartyMemberToSetActive)
+{
+	ADCharacter* PartyMemberCharacter = Cast<ADCharacter>(PartyMemberToSetActive);
+	if (!PartyMemberCharacter)
+	{
+		GEngine->AddOnScreenDebugMessage(0, 1, FColor::Red, "Not a character");
+		return;
+	}
+
+	for (ADCharacter* PartyMember : PartyMembers)
+	{
+		if (PartyMember == PartyMemberToSetActive)
+		{
+			ActivePartyMember = PartyMemberCharacter;
+		}
+	}
+}
+
+
 
 void ADPlayerController::ToggleCombatUI()
 {

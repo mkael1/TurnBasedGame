@@ -38,6 +38,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetHealth();
 
+	UFUNCTION(BlueprintCallable)
 	bool ApplyHealthChange(AActor* Instigator, const float Amount);
 
 	UPROPERTY(BlueprintAssignable, Category= "Attributes")

@@ -28,8 +28,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Party")
 		ADCharacter* GetPartyLeader();
 
-	UFUNCTION(BlueprintCallable, Category = "Action")
+	UFUNCTION(BlueprintCallable, Category = "Combat")
 	bool SelectAction(TSubclassOf<UDAction> Action);
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void SetActivePartyMember(AActor* PartyMemberToSetActive);
 
 protected:
 	// Object types to query on tick when an ability is selected.
@@ -37,7 +40,13 @@ protected:
 		TArray<TEnumAsByte<EObjectTypeQuery>> ObjectQueryParam;
 
 	UPROPERTY()
+		ADCharacter* ActivePartyMember;
+
+	UPROPERTY()
 		TSubclassOf<UDAction> SelectedAction;
+
+	UPROPERTY()
+	TSubclassOf<APawn> SelectedPawn;
 
 	UPROPERTY(EditDefaultsOnly)
 		int MaxPartySize = 4;

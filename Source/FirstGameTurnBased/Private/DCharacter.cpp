@@ -8,6 +8,7 @@
 #include "DInteractionComponent.h"
 #include "DWorldUserWidget.h"
 #include "Components/SphereComponent.h"
+#include "DAction.h"
 
 ADCharacter::ADCharacter()
 {
@@ -19,16 +20,6 @@ ADCharacter::ADCharacter()
 void ADCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
-
-
-	if (HealthBarWidgetInstance == nullptr)
-	{
-		GEngine->AddOnScreenDebugMessage(0, 0, FColor::White, "Test");
-		HealthBarWidgetInstance = CreateWidget<UDWorldUserWidget>(GetWorld(), HealthBarWidgetClass);
-		HealthBarWidgetInstance->AttachedActor = this;
-		HealthBarWidgetInstance->AddToViewport();
-	}
 }
 
 void ADCharacter::BeginPlay()
@@ -46,9 +37,10 @@ void ADCharacter::MoveUp(const float Value)
 	AddMovementInput(GetActorRightVector(), Value);
 }
 
-void ADCharacter::PrimaryAttack()
+void ADCharacter::PrimaryAttack(AActor* Target, TSubclassOf<UDAction> Action)
 {
-	ActionComp->StartActionByName("PrimaryAttack");
+	FName ActionName = Action.GetDefaultObject()->ActionName;
+	ActionComp->StartActionByName(this, ActionName, Target);
 }
 
 void ADCharacter::MoveRight(const float Value)
@@ -63,6 +55,4 @@ void ADCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAxis("MoveRight", this, &ADCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("MoveUp", this, &ADCharacter::MoveUp);
-
-	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ADCharacter::PrimaryAttack);
 }
