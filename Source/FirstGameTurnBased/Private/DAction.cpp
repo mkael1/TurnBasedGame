@@ -5,6 +5,11 @@
 
 #include "DActionComponent.h"
 
+UDAction::UDAction()
+{
+	EnergyCost = 1;
+}
+
 bool UDAction::StartAction_Implementation(AActor* Target = nullptr)
 {
 	UDActionComponent* Comp = GetActionComp();
@@ -35,6 +40,11 @@ bool UDAction::StopAction_Implementation()
 bool UDAction::GetIsRunning() const
 {
 	return bIsRunning;
+}
+
+int UDAction::GetEnergyCost()
+{
+	return EnergyCost;
 }
 
 UDActionComponent* UDAction::GetActionComp()

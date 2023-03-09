@@ -7,6 +7,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "DGameModeBase.h"
 #include "DAction.h"
+#include "DAttributeComponent.h"
+
 
 
 void ADPlayerController::BeginPlay()
@@ -14,6 +16,10 @@ void ADPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	InitializePlayerParty();
+	bShowMouseCursor = true;
+	bEnableClickEvents = true;
+	bEnableMouseOverEvents = true;
+	SetInputMode(FInputModeGameAndUI());
 }
 
 void ADPlayerController::InitializePlayerParty()
@@ -29,6 +35,10 @@ void ADPlayerController::InitializePlayerParty()
 void ADPlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	GEngine->AddOnScreenDebugMessage(0, 0, FColor::White, "Selected Actor: " + GetNameSafe(SelectedActor));
+	GEngine->AddOnScreenDebugMessage(2, 0, FColor::Blue, "Action: " + GetNameSafe(SelectedAction));
+	GEngine->AddOnScreenDebugMessage(1, 0, FColor::Red, "Energy: " + FString::FromInt(ActivePartyMemberEnergy));
+
 
 	if (SelectedAction)
 	{
@@ -37,14 +47,10 @@ void ADPlayerController::Tick(float DeltaSeconds)
 		GetHitResultUnderCursorForObjects(ObjectQueryParam, true, Hit);
 		if (Hit.GetActor())
 		{
-			if (ActivePartyMember)
-			{
-				ActivePartyMember->PrimaryAttack(Hit.GetActor(), SelectedAction);
-			}
+			SelectedActor = Hit.GetActor();
 		}
 	}
 }
-
 
 ADCharacter* ADPlayerController::AddCharacterToParty(TSubclassOf<ADCharacter> CharacterClass, AActor* PlayerStartActor = nullptr)
 {
@@ -97,11 +103,6 @@ ADCharacter* ADPlayerController::GetPartyLeader()
 	return PartyLeader;
 }
 
-bool ADPlayerController::SelectAction(TSubclassOf<UDAction> Action)
-{
-	SelectedAction = Action;
-	return true;
-}
 
 void ADPlayerController::SetActivePartyMember(AActor* PartyMemberToSetActive)
 {
@@ -117,11 +118,39 @@ void ADPlayerController::SetActivePartyMember(AActor* PartyMemberToSetActive)
 		if (PartyMember == PartyMemberToSetActive)
 		{
 			ActivePartyMember = PartyMemberCharacter;
+			UDAttributeComponent* AttributeComp = Cast<UDAttributeComponent>(PartyMemberCharacter->GetComponentByClass(UDAttributeComponent::StaticClass()));
+			ActivePartyMemberEnergy = AttributeComp->GetEnergMax();
 		}
 	}
 }
 
+bool ADPlayerController::SelectAction(TSubclassOf<UDAction> Action)
+{
+	if (!Action)
+	{
+		return false;
+	}
 
+	int EnergyCost = Action->GetDefaultObject<UDAction>()->GetEnergyCost();
+	if (ActivePartyMemberEnergy >= EnergyCost)
+	{
+		SelectedAction = Action;
+		return true;
+	}
+
+	return false;
+}
+
+void ADPlayerController::PrimaryInteract()
+{
+	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, "Test");
+	if (ActivePartyMember && SelectedActor && ActivePartyMemberEnergy >= SelectedAction->GetDefaultObject<UDAction>()->GetEnergyCost())
+	{
+		int EnergyCost = SelectedAction->GetDefaultObject<UDAction>()->GetEnergyCost();
+		ActivePartyMemberEnergy -= EnergyCost;
+		ActivePartyMember->UseCombatAction(SelectedActor, SelectedAction);
+	}
+}
 
 void ADPlayerController::ToggleCombatUI()
 {
@@ -143,7 +172,13 @@ void ADPlayerController::ToggleCombatUI()
 	{
 		CombatWidgetInstance->AddToViewport(10);
 		bShowMouseCursor = true;
-		SetInputMode(FInputModeUIOnly());
+		SetInputMode(FInputModeGameAndUI());
 	}
 }
 
+void ADPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	InputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ADPlayerController::PrimaryInteract);
+}

@@ -37,7 +37,7 @@ void ADCharacter::MoveUp(const float Value)
 	AddMovementInput(GetActorRightVector(), Value);
 }
 
-void ADCharacter::PrimaryAttack(AActor* Target, TSubclassOf<UDAction> Action)
+void ADCharacter::UseCombatAction(AActor* Target, TSubclassOf<UDAction> Action)
 {
 	FName ActionName = Action.GetDefaultObject()->ActionName;
 	ActionComp->StartActionByName(this, ActionName, Target);

@@ -19,6 +19,8 @@ class FIRSTGAMETURNBASED_API ADPlayerController : public APlayerController
 
 public:
 
+	virtual void SetupInputComponent() override;
+
 	UFUNCTION(BlueprintCallable, Category = "Party")
 		ADCharacter* AddCharacterToParty(TSubclassOf<ADCharacter> CharacterToAdd, AActor* PlayerStartActor);
 
@@ -41,6 +43,9 @@ protected:
 
 	UPROPERTY()
 		ADCharacter* ActivePartyMember;
+
+	UPROPERTY()
+		int ActivePartyMemberEnergy;
 
 	UPROPERTY()
 		TSubclassOf<UDAction> SelectedAction;
@@ -68,9 +73,17 @@ protected:
 	UPROPERTY()
 		UUserWidget* CombatWidgetInstance;
 
+	UPROPERTY()
+	AActor* SelectedActor;
+
+
+
 
 	UFUNCTION(BlueprintCallable)
 		void ToggleCombatUI();
+
+	UFUNCTION(BlueprintCallable)
+	void PrimaryInteract();
 
 	virtual void BeginPlay() override;
 

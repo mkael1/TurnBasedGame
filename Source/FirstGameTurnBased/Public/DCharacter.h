@@ -34,7 +34,7 @@ public:
 	void HealSelf(int32 Amount = 100);
 
 	UFUNCTION(BlueprintCallable)
-		void PrimaryAttack(AActor* Target, TSubclassOf<UDAction> Action);
+		void UseCombatAction(AActor* Target, TSubclassOf<UDAction> Action);
 
 protected:
 	UPROPERTY()

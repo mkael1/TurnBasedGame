@@ -28,6 +28,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Action")
 	FName ActionName;
 
+	UFUNCTION(BlueprintCallable)
+	int GetEnergyCost();
+
+	UDAction();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Tags")
 	FGameplayTagContainer GrantsTag;
@@ -37,6 +42,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	UDActionComponent* GetActionComp();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Energy")
+	int EnergyCost;
 
 
 	bool bIsRunning;

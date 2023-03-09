@@ -27,6 +27,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float Health;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
+	int EnergyMax;
 	
 public:	
 	// Called every frame
@@ -40,6 +43,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool ApplyHealthChange(AActor* Instigator, const float Amount);
+
+	UFUNCTION(BlueprintCallable)
+		int GetEnergMax();
 
 	UPROPERTY(BlueprintAssignable, Category= "Attributes")
 	FOnAttributeChange OnHealthChanged;

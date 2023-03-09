@@ -58,3 +58,8 @@ bool UDAttributeComponent::ApplyHealthChange(AActor* Instigator, const float Amo
 	return false;
 }
 
+int UDAttributeComponent::GetEnergMax()
+{
+	return EnergyMax;
+}
+
