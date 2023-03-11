@@ -29,7 +29,7 @@ bool UDActionComponent::StartActionByName(AActor* Instigator, FName ActionName, 
 	{
 		if (Action && Action->ActionName == ActionName)
 		{
-			 Action->StartAction(TargetActor);
+			 Action->StartAction(Instigator, TargetActor);
 		}
 	}
 	return false;

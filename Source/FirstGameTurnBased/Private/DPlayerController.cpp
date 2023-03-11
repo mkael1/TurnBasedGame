@@ -10,7 +10,6 @@
 #include "DAttributeComponent.h"
 
 
-
 void ADPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -20,16 +19,6 @@ void ADPlayerController::BeginPlay()
 	bEnableClickEvents = true;
 	bEnableMouseOverEvents = true;
 	SetInputMode(FInputModeGameAndUI());
-}
-
-void ADPlayerController::InitializePlayerParty()
-{
-	ADGameModeBase* MyMode = Cast<ADGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
-	AActor* PlayerStartActor = MyMode->FindPlayerStart(this);
-
-	ADCharacter* InitialPartyMember = AddCharacterToParty(StartingPartyMember, PlayerStartActor);
-	Possess(InitialPartyMember);
-	SetPartyLeader(InitialPartyMember);
 }
 
 void ADPlayerController::Tick(float DeltaSeconds)
@@ -45,11 +34,23 @@ void ADPlayerController::Tick(float DeltaSeconds)
 		FHitResult Hit;
 
 		GetHitResultUnderCursorForObjects(ObjectQueryParam, true, Hit);
-		if (Hit.GetActor())
+		if (!Hit.GetActor())
 		{
-			SelectedActor = Hit.GetActor();
+			SelectedActor = nullptr;
+			return;
 		}
+		SelectedActor = Hit.GetActor();
 	}
+}
+
+void ADPlayerController::InitializePlayerParty()
+{
+	ADGameModeBase* MyMode = Cast<ADGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+	AActor* PlayerStartActor = MyMode->FindPlayerStart(this);
+
+	ADCharacter* InitialPartyMember = AddCharacterToParty(StartingPartyMember, PlayerStartActor);
+	Possess(InitialPartyMember);
+	SetPartyLeader(InitialPartyMember);
 }
 
 ADCharacter* ADPlayerController::AddCharacterToParty(TSubclassOf<ADCharacter> CharacterClass, AActor* PlayerStartActor = nullptr)
@@ -124,14 +125,19 @@ void ADPlayerController::SetActivePartyMember(AActor* PartyMemberToSetActive)
 	}
 }
 
-bool ADPlayerController::SelectAction(TSubclassOf<UDAction> Action)
+ADCharacter* ADPlayerController::GetActivePartyMember()
+{
+	return ActivePartyMember;
+}
+
+bool ADPlayerController::SelectAction(UDAction* Action)
 {
 	if (!Action)
 	{
 		return false;
 	}
 
-	int EnergyCost = Action->GetDefaultObject<UDAction>()->GetEnergyCost();
+	int EnergyCost = Action->GetEnergyCost();
 	if (ActivePartyMemberEnergy >= EnergyCost)
 	{
 		SelectedAction = Action;
@@ -144,11 +150,12 @@ bool ADPlayerController::SelectAction(TSubclassOf<UDAction> Action)
 void ADPlayerController::PrimaryInteract()
 {
 	GEngine->AddOnScreenDebugMessage(0, 1, FColor::White, "Test");
-	if (ActivePartyMember && SelectedActor && ActivePartyMemberEnergy >= SelectedAction->GetDefaultObject<UDAction>()->GetEnergyCost())
+	if (ActivePartyMember && SelectedActor && ActivePartyMemberEnergy >= SelectedAction->GetEnergyCost())
 	{
-		int EnergyCost = SelectedAction->GetDefaultObject<UDAction>()->GetEnergyCost();
+		int EnergyCost = SelectedAction->GetEnergyCost();
 		ActivePartyMemberEnergy -= EnergyCost;
 		ActivePartyMember->UseCombatAction(SelectedActor, SelectedAction);
+		OnActionUsed.Broadcast(ActivePartyMember, ActivePartyMemberEnergy);
 	}
 }
 
@@ -175,6 +182,8 @@ void ADPlayerController::ToggleCombatUI()
 		SetInputMode(FInputModeGameAndUI());
 	}
 }
+
+
 
 void ADPlayerController::SetupInputComponent()
 {

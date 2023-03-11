@@ -17,7 +17,7 @@ class FIRSTGAMETURNBASED_API UDAction : public UObject
 
 public:
 	UFUNCTION(BlueprintNativeEvent)
-	bool StartAction(AActor* Target = nullptr);
+	bool StartAction(AActor* Instigator, AActor* Target = nullptr);
 
 	UFUNCTION(BlueprintNativeEvent)
 	bool StopAction();
@@ -39,6 +39,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Tags")
 	FGameplayTagContainer BlockedTags;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Tags")
+	FGameplayTagContainer AttributeTags;
 
 	UFUNCTION(BlueprintCallable)
 	UDActionComponent* GetActionComp();

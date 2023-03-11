@@ -9,12 +9,20 @@
 #include "DWorldUserWidget.h"
 #include "Components/SphereComponent.h"
 #include "DAction.h"
+#include "Camera/CameraComponent.h"
+#include "GameFrameWork/SpringArmComponent.h"
 
 ADCharacter::ADCharacter()
 {
 	AttributeComp = CreateDefaultSubobject<UDAttributeComponent>("AttributeComp");
 	ActionComp = CreateDefaultSubobject<UDActionComponent>("ActionComp");
 	InteractionComp = CreateDefaultSubobject<UDInteractionComponent>("InteractionComp");
+
+	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
+	SpringArmComp->SetupAttachment(RootComponent);
+
+	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
+	CameraComp->SetupAttachment(SpringArmComp);
 }
 
 void ADCharacter::PostInitializeComponents()
@@ -37,9 +45,9 @@ void ADCharacter::MoveUp(const float Value)
 	AddMovementInput(GetActorRightVector(), Value);
 }
 
-void ADCharacter::UseCombatAction(AActor* Target, TSubclassOf<UDAction> Action)
+void ADCharacter::UseCombatAction(AActor* Target, UDAction* Action)
 {
-	FName ActionName = Action.GetDefaultObject()->ActionName;
+	FName ActionName = Action->ActionName;
 	ActionComp->StartActionByName(this, ActionName, Target);
 }
 

@@ -8,6 +8,8 @@
 
 class ADCharacter;
 class UDAction;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnActionUsed, AActor*, Instigator, int, EnergyLeft);
 /**
  *
  */
@@ -31,14 +33,20 @@ public:
 		ADCharacter* GetPartyLeader();
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	bool SelectAction(TSubclassOf<UDAction> Action);
+		bool SelectAction(UDAction* Action);
 
-	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void SetActivePartyMember(AActor* PartyMemberToSetActive);
+	UFUNCTION(BlueprintCallable, Category = "Party")
+		void SetActivePartyMember(AActor* PartyMemberToSetActive);
+
+	UFUNCTION(BlueprintCallable, Category = "Party")
+	ADCharacter* GetActivePartyMember();
+
+	UPROPERTY(BlueprintAssignable)
+		FOnActionUsed OnActionUsed;
 
 protected:
 	// Object types to query on tick when an ability is selected.
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	UPROPERTY(EditDefaultsOnly, Category = "Trace")
 		TArray<TEnumAsByte<EObjectTypeQuery>> ObjectQueryParam;
 
 	UPROPERTY()
@@ -48,10 +56,10 @@ protected:
 		int ActivePartyMemberEnergy;
 
 	UPROPERTY()
-		TSubclassOf<UDAction> SelectedAction;
+		UDAction* SelectedAction;
 
 	UPROPERTY()
-	TSubclassOf<APawn> SelectedPawn;
+		TSubclassOf<APawn> SelectedPawn;
 
 	UPROPERTY(EditDefaultsOnly)
 		int MaxPartySize = 4;
@@ -74,7 +82,7 @@ protected:
 		UUserWidget* CombatWidgetInstance;
 
 	UPROPERTY()
-	AActor* SelectedActor;
+		AActor* SelectedActor;
 
 
 
@@ -83,7 +91,7 @@ protected:
 		void ToggleCombatUI();
 
 	UFUNCTION(BlueprintCallable)
-	void PrimaryInteract();
+		void PrimaryInteract();
 
 	virtual void BeginPlay() override;
 

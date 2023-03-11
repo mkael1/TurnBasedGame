@@ -10,7 +10,7 @@ UDAction::UDAction()
 	EnergyCost = 1;
 }
 
-bool UDAction::StartAction_Implementation(AActor* Target = nullptr)
+bool UDAction::StartAction_Implementation(AActor* Instigator, AActor* Target = nullptr)
 {
 	UDActionComponent* Comp = GetActionComp();
 
