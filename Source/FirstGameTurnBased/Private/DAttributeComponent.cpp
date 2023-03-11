@@ -2,6 +2,7 @@
 
 
 #include "DAttributeComponent.h"
+#include "DGameModeBase.h"
 
 // Sets default values for this component's properties
 UDAttributeComponent::UDAttributeComponent()
@@ -52,6 +53,14 @@ bool UDAttributeComponent::ApplyHealthChange(AActor* Instigator, const float Amo
 	if (NewHealth != OldHealth)
 	{
 		OnHealthChanged.Broadcast(Instigator, this, Amount - Health, Health);
+		if (Amount < 0 && NewHealth <= 0)
+		{
+			ADGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ADGameModeBase>();
+			if (GameMode)
+			{
+				GameMode->OnActorKilled(GetOwner(), Instigator);
+			}
+		}
 		return true;
 	}
 

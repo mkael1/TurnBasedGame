@@ -7,6 +7,25 @@
 #include "DGameStateBase.generated.h"
 
 class ADCharacter;
+
+USTRUCT(BlueprintType)
+struct FTeam
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY()
+		APawn* TeamMember;
+
+	TArray<APawn*> NextTurns;
+};
+
+UENUM(BlueprintType)
+enum class EGameStatus : uint8
+{
+	Combat     UMETA(DisplayName = "Combat"),
+	Exploring      UMETA(DisplayName = "Exploring"),
+};
 /**
  *
  */
@@ -24,7 +43,10 @@ protected:
 	APawn* CurrentTurn;
 
 	UPROPERTY(BlueprintReadWrite)
-	int TurnCount;
+		int TurnCount;
+
+	UPROPERTY(BlueprintReadOnly, Category = Status)
+		EGameStatus GameStatus;
 
 
 public:
@@ -48,8 +70,12 @@ public:
 		void ChangeTurn();
 
 	UFUNCTION(BlueprintCallable)
-	int GetTurnCount();
+		int GetTurnCount();
 
+	UFUNCTION(BlueprintCallable)
+		EGameStatus GetGameStatus();
 
+	UFUNCTION(BlueprintCallable)
+		void SetGameStatus(EGameStatus NewGameStatus);
 
 };

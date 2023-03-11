@@ -47,4 +47,14 @@ int ADGameState::GetTurnCount()
 	return TurnCount;
 }
 
+EGameStatus ADGameState::GetGameStatus()
+{
+	return GameStatus;
+}
+
+void ADGameState::SetGameStatus(EGameStatus NewStatus)
+{
+	GameStatus = NewStatus;
+}
+
 

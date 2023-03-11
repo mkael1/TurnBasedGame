@@ -36,7 +36,14 @@ void ADGameModeBase::InitializeTeams(APawn* PlayerPawn, APawn* EnemyPawn)
 void ADGameModeBase::StartCombat()
 {
 	GameStateInstance->ChangeTurn();
+	GameStateInstance->SetGameStatus(EGameStatus::Combat);
 	OnTurnChanged.Broadcast(this, GameStateInstance->GetCurrentTurn(), GameStateInstance->GetTurnCount());
+}
+
+void ADGameModeBase::EndCombat()
+{
+	GameStateInstance->SetGameStatus(EGameStatus::Exploring);
+	OnCombatEnded.Broadcast(GameStateInstance->GetTeamOne());
 }
 
 void ADGameModeBase::FinishPlayerCombatTurn(APawn* Player)
@@ -51,6 +58,12 @@ void ADGameModeBase::FinishPlayerCombatTurn(APawn* Player)
 		GameStateInstance->ChangeTurn();
 		OnTurnChanged.Broadcast(OldActor, GameStateInstance->GetCurrentTurn(), GameStateInstance->GetTurnCount());
 	}
+}
+
+void ADGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
+{
+	VictimActor->SetActorRotation(FQuat::MakeFromEuler(FVector(0, -90, 0)));
+	EndCombat();
 }
 
 void ADGameModeBase::DevSwitchTurn()
