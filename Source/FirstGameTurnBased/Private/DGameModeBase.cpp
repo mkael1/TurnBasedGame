@@ -5,6 +5,7 @@
 #include "DGameStateBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DPlayerController.h"
+#include "DAttributeComponent.h"
 
 
 void ADGameModeBase::BeginPlay()
@@ -28,6 +29,12 @@ void ADGameModeBase::EnterCombat(AActor* Player, AActor* Enemy)
 
 void ADGameModeBase::InitializeTeams(APawn* PlayerPawn, APawn* EnemyPawn)
 {
+	UDAttributeComponent* AttributeComp = Cast<UDAttributeComponent>(PlayerPawn->GetComponentByClass(UDAttributeComponent::StaticClass()));
+	AttributeComp->OnDeathEvent.AddDynamic(this, &ADGameModeBase::OnActorKilled);
+
+	UDAttributeComponent* EnemyAttributeComp = Cast<UDAttributeComponent>(EnemyPawn->GetComponentByClass(UDAttributeComponent::StaticClass()));
+	EnemyAttributeComp->OnDeathEvent.AddDynamic(this, &ADGameModeBase::OnActorKilled);
+
 
 	GameStateInstance->SetTeamOne(PlayerPawn);
 	GameStateInstance->SetTeamTwo(EnemyPawn);
@@ -42,6 +49,16 @@ void ADGameModeBase::StartCombat()
 
 void ADGameModeBase::EndCombat()
 {
+	APawn* TeamOne = GameStateInstance->GetTeamOne();
+	APawn* TeamTwo = GameStateInstance->GetTeamTwo();
+
+	UDAttributeComponent* AttributeComp = Cast<UDAttributeComponent>(TeamOne->GetComponentByClass(UDAttributeComponent::StaticClass()));
+	AttributeComp->OnDeathEvent.RemoveDynamic(this, &ADGameModeBase::OnActorKilled);
+
+	UDAttributeComponent* AttributeComp2 = Cast<UDAttributeComponent>(TeamTwo->GetComponentByClass(UDAttributeComponent::StaticClass()));
+	AttributeComp2->OnDeathEvent.RemoveDynamic(this, &ADGameModeBase::OnActorKilled);
+
+
 	GameStateInstance->SetGameStatus(EGameStatus::Exploring);
 	OnCombatEnded.Broadcast(GameStateInstance->GetTeamOne());
 }
@@ -60,9 +77,8 @@ void ADGameModeBase::FinishPlayerCombatTurn(APawn* Player)
 	}
 }
 
-void ADGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
+void ADGameModeBase::OnActorKilled(AActor* InstigatorActor, AActor* Victim)
 {
-	VictimActor->SetActorRotation(FQuat::MakeFromEuler(FVector(0, -90, 0)));
 	EndCombat();
 }
 

@@ -29,8 +29,6 @@ public:
 
 	ADCharacter();
 
-	virtual void PostInitializeComponents() override;
-
 	virtual void BeginPlay() override;
 
 	UFUNCTION(Exec)
@@ -38,6 +36,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void UseCombatAction(AActor* Target, UDAction* Action);
+
+
 
 protected:
 	UPROPERTY()
@@ -60,6 +60,13 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 		UCameraComponent* CameraComp;
+
+	UFUNCTION(BlueprintCallable)
+		void HandleDeath(AActor* InstigatorActor, AActor* Victim);
+
+	virtual void PostInitializeComponents() override;
+
+
 
 
 

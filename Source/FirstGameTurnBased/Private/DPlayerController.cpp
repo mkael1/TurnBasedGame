@@ -172,6 +172,7 @@ void ADPlayerController::ToggleCombatUI()
 		CombatWidgetInstance = nullptr;
 		bShowMouseCursor = false;
 		SetInputMode(FInputModeGameOnly());
+		return;
 	}
 
 	CombatWidgetInstance = CreateWidget<UUserWidget>(this, CombatWidgetClass);

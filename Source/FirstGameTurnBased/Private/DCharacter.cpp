@@ -25,9 +25,12 @@ ADCharacter::ADCharacter()
 	CameraComp->SetupAttachment(SpringArmComp);
 }
 
+
 void ADCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	AttributeComp->OnDeathEvent.AddDynamic(this, &ADCharacter::HandleDeath);
 }
 
 void ADCharacter::BeginPlay()
@@ -56,6 +59,10 @@ void ADCharacter::MoveRight(const float Value)
 	AddMovementInput(GetActorForwardVector(), Value);
 }
 
+void ADCharacter::HandleDeath(AActor* InstigatorActor, AActor* Victim)
+{
+	this->SetActorRotation(FQuat::MakeFromEuler(FVector(0, -90, 0)));
+}
 
 void ADCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {

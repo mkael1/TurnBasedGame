@@ -8,6 +8,9 @@
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnAttributeChange, AActor*, Instigator, UDAttributeComponent*, OwnerComp, float, Delta, float, NewValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDeath, AActor*, Instigator, AActor*, Victim);
+
+
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class FIRSTGAMETURNBASED_API UDAttributeComponent : public UActorComponent
@@ -19,8 +22,6 @@ public:
 	UDAttributeComponent();
 
 protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 		float HealthMax;
@@ -41,8 +42,6 @@ protected:
 		int Intellect;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
 		float GetHealthMax();
@@ -58,4 +57,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Attributes")
 		FOnAttributeChange OnHealthChanged;
+
+	UPROPERTY(BlueprintAssignable, Category = "Death")
+		FOnDeath OnDeathEvent;
 };

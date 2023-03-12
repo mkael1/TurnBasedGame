@@ -40,5 +40,13 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UDInteractionComponent* InteractionComp;
+
+	UFUNCTION(BlueprintCallable)
+		void HandleDeath(AActor* InstigatorActor, AActor* Victim);
+
+	UFUNCTION(BlueprintCallable)
+	void HandleCombatEnded(AActor* Winner);
+
+	virtual void BeginPlay() override;
 	
 };

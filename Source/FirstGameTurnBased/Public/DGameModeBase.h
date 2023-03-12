@@ -54,7 +54,7 @@ public:
 		FOnCombatEnded OnCombatEnded;
 
 	UFUNCTION()
-		virtual void OnActorKilled(AActor* VictimActor, AActor* Killer);
+		virtual void OnActorKilled(AActor* InstigatorActor, AActor* Victim);
 
 	UFUNCTION(BlueprintCallable)
 		void DevSwitchTurn();
