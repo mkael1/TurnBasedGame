@@ -8,6 +8,7 @@
 
 class ADCharacter;
 class UDAction;
+class UDWorldUserWidget;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnActionUsed, AActor*, Instigator, int, EnergyLeft);
 /**
@@ -83,6 +84,14 @@ protected:
 
 	UPROPERTY()
 		AActor* SelectedActor;
+
+	UPROPERTY()
+	UDWorldUserWidget* HoverTargetWidgetInstance;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UDWorldUserWidget> HoverTargetWidgetClass;
+
+
 
 
 

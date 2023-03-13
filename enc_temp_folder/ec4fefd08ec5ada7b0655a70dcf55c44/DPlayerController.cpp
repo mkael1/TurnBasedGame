@@ -35,14 +35,12 @@ void ADPlayerController::Tick(float DeltaSeconds)
 		FHitResult Hit;
 
 		GetHitResultUnderCursorForObjects(ObjectQueryParam, true, Hit);
-		if (Hit.GetActor())
-		{
-			SelectedActor = Hit.GetActor();
-		}
-		else
+		if (!Hit.GetActor())
 		{
 			SelectedActor = nullptr;
+			return;
 		}
+		SelectedActor = Hit.GetActor();
 	}
 
 	if (SelectedActor && ensure(HoverTargetWidgetClass))
@@ -50,27 +48,14 @@ void ADPlayerController::Tick(float DeltaSeconds)
 		if (!HoverTargetWidgetInstance)
 		{
 			HoverTargetWidgetInstance = CreateWidget<UDWorldUserWidget>(this, HoverTargetWidgetClass);
-			HoverTargetWidgetInstance->AddToViewport();
+			HoverTargetWidgetInstance->AddToViewport(10);
 		}
 
 		if (HoverTargetWidgetInstance)
 		{
 			HoverTargetWidgetInstance->AttachedActor = SelectedActor;
-			if (!HoverTargetWidgetInstance->IsInViewport())
-			{
-				HoverTargetWidgetInstance->AddToViewport();
-			}
 		}
 	}
-	else
-	{
-		if (HoverTargetWidgetInstance)
-		{
-
-			HoverTargetWidgetInstance->RemoveFromParent();
-		}
-	}
-
 }
 
 void ADPlayerController::InitializePlayerParty()
